@@ -6,7 +6,6 @@ function MsgBox({ message }) {
     const deleteDispatch = useDispatch()
 
     useEffect(() => {
-        // Озвучиваем только ответы от ИИ
         if (message.role === 'assistant') {
             speakWithElevenLabs(message.message)
         }
@@ -17,11 +16,11 @@ function MsgBox({ message }) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "xi-api-key": "sk_8de43daca4d539dcc4d01abbfb952f5e84be2bdc84574443",
+                "xi-api-key": process.env.REACT_APP_ELEVENLABS_API_KEY,
             },
             body: JSON.stringify({
                 text: text,
-                model_id: "eleven_monolingual_v1",
+                model_id: process.env.REACT_APP_ELEVENLABS_MODEL_ID,
                 voice_settings: {
                     stability: 0.5,
                     similarity_boost: 0.75
@@ -35,30 +34,28 @@ function MsgBox({ message }) {
     };
 
     return (
-        <>
-            <div>
-                <p className='break-words text-sm lg:text-lg xl:max-2xl:text-sm'>{message.message}</p>
-                <button
-                    className={`${message.role === 'assistant' ? 'hidden' : ''} my-1 p-1 hover:bg-blue-600 rounded-full`}
-                    onClick={() => deleteDispatch(deleteMessage(message))}
+        <div>
+            <p className='break-words text-sm lg:text-lg xl:max-2xl:text-sm'>{message.message}</p>
+            <button
+                className={`${message.role === 'assistant' ? 'hidden' : ''} my-1 p-1 hover:bg-blue-600 rounded-full`}
+                onClick={() => deleteDispatch(deleteMessage(message))}
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                    </svg>
-                </button>
-            </div>
-        </>
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                </svg>
+            </button>
+        </div>
     )
 }
 
